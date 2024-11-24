@@ -9,8 +9,8 @@ import lombok.Setter;
 import java.util.List;
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Category {
     @Id

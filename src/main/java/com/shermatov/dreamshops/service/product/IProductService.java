@@ -2,14 +2,15 @@ package com.shermatov.dreamshops.service.product;
 
 import com.shermatov.dreamshops.model.Product;
 import com.shermatov.dreamshops.request.AddProductRequest;
+import com.shermatov.dreamshops.request.ProductUpdateRequest;
 
 import java.util.List;
 
 public interface IProductService {
-    Product addProduct(AddProductRequest product);
+    Product addProduct(AddProductRequest request);
     Product getProductById(Long id);
     void deleteProductById(Long id);
-    void updateProduct(Product product, Long productId);
+    Product updateProduct(ProductUpdateRequest updates, Long productId);
     Long countProductsByBrandAndName(String brand, String name);
 
 
