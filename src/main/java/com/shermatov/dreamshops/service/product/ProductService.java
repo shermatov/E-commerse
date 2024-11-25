@@ -1,6 +1,7 @@
 package com.shermatov.dreamshops.service.product;
 
 import com.shermatov.dreamshops.exceptions.ProductNotFoundException;
+import com.shermatov.dreamshops.exceptions.ResourceNotFoundException;
 import com.shermatov.dreamshops.model.Category;
 import com.shermatov.dreamshops.model.Product;
 import com.shermatov.dreamshops.repository.CategoryRepository;
@@ -11,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -29,10 +29,10 @@ public class ProductService implements IProductService {
         // then set as the new product category
         Category category = Optional.ofNullable(
                 categoryRepository.findByName(request.getCategory().getName()))
-                .orElseGet(() -> {
-                    Category newCategory = new Category(request.getCategory().getName());
-                    return categoryRepository.save(newCategory);
-                });
+                        .orElseGet(() ->{
+                                Category newCategory = new Category(request.getCategory().getName());
+                                return categoryRepository.save(newCategory);
+                        });
         request.setCategory(category);
         return productRepository.save(createProduct(request, category));
     }
@@ -50,13 +50,13 @@ public class ProductService implements IProductService {
     @Override
     public Product getProductById(Long id) {
         return productRepository.findById(id).
-                orElseThrow(() -> new ProductNotFoundException("Product not found"));
+                orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
     @Override
     public void deleteProductById(Long id) {
         productRepository.findById(id).ifPresentOrElse(productRepository::delete,
-                () -> {throw new ProductNotFoundException("Product not found");});
+                () -> {throw new ResourceNotFoundException("Product not found");});
     }
 
     @Override
@@ -67,7 +67,7 @@ public class ProductService implements IProductService {
                 .orElseThrow(() -> new ProductNotFoundException("Product not found!"));
     }
 
-    public Product updateExistingProduct(Product existingProducts, ProductUpdateRequest request) {
+    private Product updateExistingProduct(Product existingProducts, ProductUpdateRequest request) {
         existingProducts.setName(request.getName());
         existingProducts.setBrand(request.getBrand());
         existingProducts.setPrice(request.getPrice());
