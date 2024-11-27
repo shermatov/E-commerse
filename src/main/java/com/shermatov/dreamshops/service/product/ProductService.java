@@ -1,14 +1,19 @@
 package com.shermatov.dreamshops.service.product;
 
+import com.shermatov.dreamshops.dto.ImageDto;
+import com.shermatov.dreamshops.dto.ProductDto;
 import com.shermatov.dreamshops.exceptions.ProductNotFoundException;
 import com.shermatov.dreamshops.exceptions.ResourceNotFoundException;
 import com.shermatov.dreamshops.model.Category;
+import com.shermatov.dreamshops.model.Image;
 import com.shermatov.dreamshops.model.Product;
 import com.shermatov.dreamshops.repository.CategoryRepository;
+import com.shermatov.dreamshops.repository.ImageRepository;
 import com.shermatov.dreamshops.repository.ProductRepository;
 import com.shermatov.dreamshops.request.AddProductRequest;
 import com.shermatov.dreamshops.request.ProductUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,19 +25,21 @@ public class ProductService implements IProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ModelMapper modelMapper;
+    private final ImageRepository imageRepository;
 
     @Override
     public Product addProduct(AddProductRequest request) {
-        // check if the category is found
-        // if Yes, set it as the new product category
-        // if No, then save it as a new category
-        // then set as the new product category
-        Category category = Optional.ofNullable(
-                categoryRepository.findByName(request.getCategory().getName()))
-                        .orElseGet(() ->{
-                                Category newCategory = new Category(request.getCategory().getName());
-                                return categoryRepository.save(newCategory);
-                        });
+        // check if the category is found in the DB
+        // If Yes, set it as the new product category
+        // If No, the save it as a new category
+        // The set as the new product category.
+
+        Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
+                .orElseGet(() -> {
+                    Category newCategory = new Category(request.getCategory().getName());
+                    return categoryRepository.save(newCategory);
+                });
         request.setCategory(category);
         return productRepository.save(createProduct(request, category));
     }
@@ -111,5 +118,21 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> getProductsByBrandAndName(String brand, String name) {
         return productRepository.findByBrandAndName(brand, name);
+    }
+
+    @Override
+    public List<ProductDto> getConvertedProducts(List<Product> products) {
+        return products.stream().map(this::convertToDto).toList();
+    }
+
+    @Override
+    public ProductDto convertToDto(Product product) {
+        ProductDto productDto = modelMapper.map(product, ProductDto.class);
+        List<Image> images = imageRepository.findByProductId(product.getId());
+        List<ImageDto> imageDtos = images.stream()
+                .map(image -> modelMapper.map(image, ImageDto.class))
+                .toList();
+        productDto.setImages(imageDtos);
+        return productDto;
     }
 }

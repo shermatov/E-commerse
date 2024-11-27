@@ -1,5 +1,6 @@
 package com.shermatov.dreamshops.service.product;
 
+import com.shermatov.dreamshops.dto.ProductDto;
 import com.shermatov.dreamshops.model.Product;
 import com.shermatov.dreamshops.request.AddProductRequest;
 import com.shermatov.dreamshops.request.ProductUpdateRequest;
@@ -21,4 +22,7 @@ public interface IProductService {
     List<Product> getProductsByName(String name);
     List<Product> getProductsByBrandAndName(String brand, String name);
 
+    List<ProductDto> getConvertedProducts(List<Product> products);
+
+    ProductDto convertToDto(Product product);
 }

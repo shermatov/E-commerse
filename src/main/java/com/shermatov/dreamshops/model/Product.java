@@ -36,6 +36,5 @@ public class Product {
         this.inventory = inventory;
         this.description = description;
         this.category = category;
-
     }
 }
