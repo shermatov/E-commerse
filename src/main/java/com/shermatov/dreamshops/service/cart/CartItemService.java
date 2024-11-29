@@ -14,59 +14,64 @@ import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
-public class CartItemService implements ICartItemService{
+public class CartItemService  implements ICartItemService {
     private final CartItemRepository cartItemRepository;
-    private final IProductService productService;
-    private final CartService cartService;
     private final CartRepository cartRepository;
+    private final IProductService productService;
+    private final ICartService cartService;
 
     @Override
-    public void addItemToCart(Long cartId, Long productId, Integer quantity) {
+    public void addItemToCart(Long cartId, Long productId, int quantity) {
+        //1. Get the cart
+        //2. Get the product
+        //3. Check if the product already in the cart
+        //4. If Yes, then increase the quantity with the requested quantity
+        //5. If No, then initiate a new CartItem entry.
         Cart cart = cartService.getCart(cartId);
         Product product = productService.getProductById(productId);
-        CartItem cartItem = cart.getCartItems()
+        CartItem cartItem = cart.getItems()
                 .stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst().orElse(new CartItem());
-
         if (cartItem.getId() == null) {
             cartItem.setCart(cart);
             cartItem.setProduct(product);
             cartItem.setQuantity(quantity);
             cartItem.setUnitPrice(product.getPrice());
-        } else {
-            cartItem.setQuantity(quantity + cartItem.getQuantity());
+        }
+        else {
+            cartItem.setQuantity(cartItem.getQuantity() + quantity);
         }
         cartItem.setTotalPrice();
-        cart.addCartItem(cartItem);
+        cart.addItem(cartItem);
         cartItemRepository.save(cartItem);
         cartRepository.save(cart);
-
-
     }
 
     @Override
     public void removeItemFromCart(Long cartId, Long productId) {
         Cart cart = cartService.getCart(cartId);
         CartItem itemToRemove = getCartItem(cartId, productId);
-
-        cart.removeCartItem(itemToRemove);
+        cart.removeItem(itemToRemove);
         cartRepository.save(cart);
     }
 
     @Override
-    public void updateItemQuantity(Long cartId, Long productId, Integer quantity) {
+    public void updateItemQuantity(Long cartId, Long productId, int quantity) {
         Cart cart = cartService.getCart(cartId);
-        cart.getCartItems().stream()
-                .filter(cartItem -> cartItem.getProduct().getId().equals(productId))
+        cart.getItems()
+                .stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst()
-                .ifPresent(cartItem -> {
-                    cartItem.setQuantity(quantity);
-                    cartItem.setUnitPrice(cartItem.getProduct().getPrice());
-                    cartItem.setTotalPrice();
+                .ifPresent(item -> {
+                    item.setQuantity(quantity);
+                    item.setUnitPrice(item.getProduct().getPrice());
+                    item.setTotalPrice();
                 });
+        BigDecimal totalAmount = cart.getItems()
+                .stream().map(CartItem ::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        BigDecimal totalAmount = cart.getTotalAmount();
         cart.setTotalAmount(totalAmount);
         cartRepository.save(cart);
     }
@@ -74,10 +79,9 @@ public class CartItemService implements ICartItemService{
     @Override
     public CartItem getCartItem(Long cartId, Long productId) {
         Cart cart = cartService.getCart(cartId);
-        return cart.getCartItems()
+        return  cart.getItems()
                 .stream()
-                .filter(cartItem -> cartItem.getProduct().getId().equals(productId))
-                .findFirst().orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst().orElseThrow(() -> new ResourceNotFoundException("Item not found"));
     }
 }

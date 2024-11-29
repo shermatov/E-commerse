@@ -6,10 +6,10 @@ import com.shermatov.dreamshops.repository.CartItemRepository;
 import com.shermatov.dreamshops.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicLong;
-
 
 @Service
 @RequiredArgsConstructor
@@ -18,29 +18,29 @@ public class CartService implements ICartService {
     private final CartItemRepository cartItemRepository;
     private final AtomicLong cartIdGenerator = new AtomicLong(0);
 
-
     @Override
-    public Cart getCart(Long cartId) {
-        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
-        BigDecimal totalPrice = cart.getTotalAmount();
-        cart.setTotalAmount(totalPrice);
-
+    public Cart getCart(Long id) {
+        Cart cart = cartRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+        BigDecimal totalAmount = cart.getTotalAmount();
+        cart.setTotalAmount(totalAmount);
         return cartRepository.save(cart);
     }
 
-    @Override
-    public void clearCart(Long cartId) {
-        Cart cart = getCart(cartId);
-        cartItemRepository.deleteAllByCartId(cartId);
-        cart.getCartItems().clear();
-        cartRepository.deleteById(cartId);
 
+    @Transactional
+    @Override
+    public void clearCart(Long id) {
+        Cart cart = getCart(id);
+        cartItemRepository.deleteAllByCartId(id);
+        cart.getItems().clear();
+        cartRepository.deleteById(id);
 
     }
 
     @Override
-    public BigDecimal getTotalPrice(Long cartId) {
-        Cart cart = getCart(cartId);
+    public BigDecimal getTotalPrice(Long id) {
+        Cart cart = getCart(id);
         return cart.getTotalAmount();
     }
 
@@ -50,5 +50,7 @@ public class CartService implements ICartService {
         Long newCartId = cartIdGenerator.incrementAndGet();
         newCart.setId(newCartId);
         return cartRepository.save(newCart).getId();
+
     }
+
 }
