@@ -2,7 +2,6 @@ package com.shermatov.dreamshops.service.product;
 
 import com.shermatov.dreamshops.dto.ImageDto;
 import com.shermatov.dreamshops.dto.ProductDto;
-import com.shermatov.dreamshops.exceptions.ProductNotFoundException;
 import com.shermatov.dreamshops.exceptions.ResourceNotFoundException;
 import com.shermatov.dreamshops.model.Category;
 import com.shermatov.dreamshops.model.Image;
@@ -22,7 +21,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProductService implements IProductService {
-
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
@@ -54,40 +52,40 @@ public class ProductService implements IProductService {
                 category
         );
     }
+
+
     @Override
     public Product getProductById(Long id) {
-        return productRepository.findById(id).
-                orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        return productRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Product not found!"));
     }
 
     @Override
     public void deleteProductById(Long id) {
-        productRepository.findById(id).ifPresentOrElse(productRepository::delete,
-                () -> {throw new ResourceNotFoundException("Product not found");});
+        productRepository.findById(id)
+                .ifPresentOrElse(productRepository::delete,
+                        () -> {throw new ResourceNotFoundException("Product not found!");});
     }
 
     @Override
     public Product updateProduct(ProductUpdateRequest request, Long productId) {
         return productRepository.findById(productId)
-                .map(existingProduct -> updateExistingProduct(existingProduct, request))
-                .map(productRepository::save)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found!"));
+                .map(existingProduct -> updateExistingProduct(existingProduct,request))
+                .map(productRepository :: save)
+                .orElseThrow(()-> new ResourceNotFoundException("Product not found!"));
     }
 
-    private Product updateExistingProduct(Product existingProducts, ProductUpdateRequest request) {
-        existingProducts.setName(request.getName());
-        existingProducts.setBrand(request.getBrand());
-        existingProducts.setPrice(request.getPrice());
-        existingProducts.setInventory(request.getInventory());
-        existingProducts.setDescription(request.getDescription());
+    private Product updateExistingProduct(Product existingProduct, ProductUpdateRequest request) {
+        existingProduct.setName(request.getName());
+        existingProduct.setBrand(request.getBrand());
+        existingProduct.setPrice(request.getPrice());
+        existingProduct.setInventory(request.getInventory());
+        existingProduct.setDescription(request.getDescription());
+
         Category category = categoryRepository.findByName(request.getCategory().getName());
-        existingProducts.setCategory(category);
-        return existingProducts;
-    }
+        existingProduct.setCategory(category);
+        return  existingProduct;
 
-    @Override
-    public Long countProductsByBrandAndName(String brand, String name) {
-        return productRepository.countByBrandAndName(brand, name);
     }
 
     @Override
@@ -107,7 +105,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> getProductsByCategoryAndBrand(String category, String brand) {
-        return productRepository.findByNameAndBrand(category, brand);
+        return productRepository.findByCategoryNameAndBrand(category, brand);
     }
 
     @Override
@@ -118,6 +116,11 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> getProductsByBrandAndName(String brand, String name) {
         return productRepository.findByBrandAndName(brand, name);
+    }
+
+    @Override
+    public Long countProductsByBrandAndName(String brand, String name) {
+        return productRepository.countByBrandAndName(brand, name);
     }
 
     @Override

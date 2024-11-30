@@ -1,6 +1,5 @@
 package com.shermatov.dreamshops.controller;
 
-
 import com.shermatov.dreamshops.dto.ProductDto;
 import com.shermatov.dreamshops.exceptions.ResourceNotFoundException;
 import com.shermatov.dreamshops.model.Product;

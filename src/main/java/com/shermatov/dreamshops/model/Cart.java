@@ -25,7 +25,6 @@ public class Cart {
     private Set<CartItem> items = new HashSet<>();
 
 
-
     public void addItem(CartItem item) {
         this.items.add(item);
         item.setCart(this);
@@ -38,7 +37,7 @@ public class Cart {
         updateTotalAmount();
     }
 
-    public void updateTotalAmount() {
+    private void updateTotalAmount() {
         this.totalAmount = items.stream().map(item -> {
             BigDecimal unitPrice = item.getUnitPrice();
             if (unitPrice == null) {

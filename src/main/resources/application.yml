@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: dream-shop
   datasource:
     url: jdbc:mysql://localhost:3306/dream_shops_db
     username: root
@@ -9,6 +11,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate.format_sql: true
+    show-sql: true
   servlet:
     multipart:
       max-file-size: 5MB
