@@ -1,5 +1,6 @@
 package com.shermatov.dreamshops.model;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,5 @@ public class CartItem {
         this.totalPrice = this.unitPrice.multiply(new BigDecimal(quantity));
 
     }
-
 
 }
