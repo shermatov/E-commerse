@@ -7,7 +7,7 @@ import com.shermatov.dreamshops.model.User;
 import com.shermatov.dreamshops.response.ApiResponse;
 import com.shermatov.dreamshops.service.cart.ICartItemService;
 import com.shermatov.dreamshops.service.cart.ICartService;
-import com.shermatov.dreamshops.service.user.UserService;
+import com.shermatov.dreamshops.service.user.IUserService;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,22 +22,22 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 public class CartItemController {
     private final ICartItemService cartItemService;
     private final ICartService cartService;
-    private final UserService userService;
+    private final IUserService userService;
 
 
     @PostMapping("/item/add")
-    public ResponseEntity<ApiResponse> addItemToCart(
+    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam(required = false) Long cartId,
                                                      @RequestParam Long productId,
                                                      @RequestParam Integer quantity) {
         try {
-            User user = userService.getAuthenticatedUser();
+            User  user = userService.getAuthenticatedUser();
             Cart cart = cartService.initializeNewCart(user);
 
             cartItemService.addItemToCart(cart.getId(), productId, quantity);
             return ResponseEntity.ok(new ApiResponse("Add Item Success", null));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
-        } catch (JwtException e) {
+        }catch (JwtException e){
             return ResponseEntity.status(UNAUTHORIZED).body(new ApiResponse(e.getMessage(), null));
         }
     }

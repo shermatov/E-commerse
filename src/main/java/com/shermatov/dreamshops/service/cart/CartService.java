@@ -1,6 +1,5 @@
 package com.shermatov.dreamshops.service.cart;
 
-
 import com.shermatov.dreamshops.exceptions.ResourceNotFoundException;
 import com.shermatov.dreamshops.model.Cart;
 import com.shermatov.dreamshops.model.User;
@@ -49,13 +48,12 @@ public class CartService implements ICartService {
 
     @Override
     public Cart initializeNewCart(User user) {
-         return Optional.ofNullable(getCartByUserId(user.getId()))
-                 .orElseGet(() -> {
-                         Cart cart = new Cart();
-                         cart.setUser(user);
-                         return cartRepository.save(cart);
-                 });
-
+        return Optional.ofNullable(getCartByUserId(user.getId()))
+                .orElseGet(()->{
+                    Cart cart = new Cart();
+                    cart.setUser(user);
+                    return cartRepository.save(cart);
+                });
 
     }
 
@@ -63,5 +61,4 @@ public class CartService implements ICartService {
     public Cart getCartByUserId(Long userId) {
         return cartRepository.findByUserId(userId);
     }
-
 }

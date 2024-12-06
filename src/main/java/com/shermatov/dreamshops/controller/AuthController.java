@@ -1,5 +1,6 @@
 package com.shermatov.dreamshops.controller;
 
+
 import com.shermatov.dreamshops.request.LoginRequest;
 import com.shermatov.dreamshops.response.ApiResponse;
 import com.shermatov.dreamshops.response.JwtResponse;
@@ -26,21 +27,20 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
 
-
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest request){
         try {
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(
-                    request.getEmail(), request.getPassword()));
-
+                            request.getEmail(),request.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = jwtUtils.generateTokenForUser(authentication);
+            String jwt = jwtUtils.generateTokenForUser(authentication);// token is generated here by using this method
             ShopUserDetails userDetails = (ShopUserDetails) authentication.getPrincipal();
-            JwtResponse jwtResponse = new JwtResponse(userDetails.getId(), jwt);
-            return ResponseEntity.ok(new ApiResponse("Login successful", jwtResponse));
+            JwtResponse jwtResponse = new JwtResponse(userDetails.getId(),jwt);
+            return ResponseEntity.ok(new ApiResponse("Login Success",jwtResponse));
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(e.getMessage(), null));
+            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(e.getMessage(),null));
         }
     }
+
 }

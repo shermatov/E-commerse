@@ -21,19 +21,23 @@ public class ShopUserDetails implements UserDetails {
     private Long id;
     private String email;
     private String password;
+
     private Collection<GrantedAuthority> authorities;
-    public static ShopUserDetails buildUserDetails(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream()
+
+    // this method grant access to the roles of user
+    public static ShopUserDetails buildUserDetails(User user){
+        List<GrantedAuthority> authorities =user.getRoles()
+                .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
 
         return new ShopUserDetails(
                 user.getId(),
                 user.getEmail(),
                 user.getPassword(),
-                authorities
-        );
+                authorities);
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

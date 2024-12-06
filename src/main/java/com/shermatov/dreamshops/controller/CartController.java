@@ -20,7 +20,7 @@ public class CartController {
     private final ICartService cartService;
 
     @GetMapping("/{cartId}/my-cart")
-    public ResponseEntity<ApiResponse> getCart(@PathVariable Long cartId) {
+    public ResponseEntity<ApiResponse> getCart( @PathVariable Long cartId) {
         try {
             Cart cart = cartService.getCart(cartId);
             return ResponseEntity.ok(new ApiResponse("Success", cart));
