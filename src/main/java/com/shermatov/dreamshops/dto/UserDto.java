@@ -1,7 +1,6 @@
 package com.shermatov.dreamshops.dto;
 
 import lombok.Data;
-
 import java.util.List;
 
 @Data
