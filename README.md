@@ -1,110 +1,118 @@
-<h1 align="center">🌟 Dream Shop 🌟</h1>
-<p align="center"><b>Empowering Local Businesses Through Technology</b></p>
+# 🛍️ Dream Shop
 
-<p align="center">
-  <img src="https://via.placeholder.com/1200x400.png?text=Dream+Shop+Banner" alt="Dream Shop Banner" />
-</p>
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
 
----
-
-<h2>🚀 Overview</h2>
-<p>Dream Shop is a modern, scalable web application designed to support rural businesses by connecting them with their customers. It simplifies product discovery and purchasing, enabling small businesses to thrive in the digital economy.</p>
-
-<h3>Why Dream Shop?</h3>
-<p>Small businesses often lack access to tools that make online selling easy. Dream Shop bridges this gap with a secure, feature-rich platform tailored to their needs.</p>
+**Dream Shop** is a cutting-edge e-commerce application designed for managing and selling products online. It leverages modern development frameworks and provides seamless user experiences through secure authentication and intuitive APIs.
 
 ---
 
-<h2>🎯 Features</h2>
-<ul>
-  <li>✅ <b>Customer Management</b>: Register, update profiles, and track orders.</li>
-  <li>✅ <b>Product Showcase</b>: Effortlessly add, edit, and display products.</li>
-  <li>✅ <b>Secure Access</b>: Authentication powered by Spring Security.</li>
-  <li>✅ <b>Scalable Deployment</b>: Containerized with Docker and hosted on AWS.</li>
-</ul>
+## 🚀 Features
+- 🧑‍💻 **User Management:** Secure user registration and login.
+- 🔒 **JWT Authentication:** Protect endpoints with token-based authentication.
+- 📦 **Product Management:** Add, edit, and display products easily.
+- 🌐 **RESTful API:** Modular API with versioning support.
+- ⚙️ **Database Management:** Robust database handling with Hibernate and Flyway.
+- 🛠️ **Scalable Deployment:** Dockerized for easy cloud hosting.
 
 ---
 
-<h2>🛠️ Tech Stack</h2>
-<table>
-  <tr>
-    <th>Technology</th>
-    <th>Purpose</th>
-  </tr>
-  <tr>
-    <td>Spring Boot 3</td>
-    <td>Back-end Framework</td>
-  </tr>
-  <tr>
-    <td>React / Angular</td>
-    <td>Front-end Development</td>
-  </tr>
-  <tr>
-    <td>PostgreSQL</td>
-    <td>Database Management</td>
-  </tr>
-  <tr>
-    <td>Docker</td>
-    <td>Containerization</td>
-  </tr>
-  <tr>
-    <td>AWS</td>
-    <td>Cloud Hosting</td>
-  </tr>
-</table>
+## 📋 Technologies Used
+
+| Technology        | Purpose                                |
+|--------------------|----------------------------------------|
+| **Java**          | Primary backend language              |
+| **Spring Boot 3** | Backend framework for REST API        |
+| **MySQL**         | Database management system            |
+| **JWT**           | Secure token-based authentication     |
+| **Docker**        | Containerization for deployment       |
+| **Flyway**        | Database migration management         |
+| **React/Angular** | (Optional) Frontend integration       |
 
 ---
 
-<h2>🎨 Screenshots</h2>
-<table>
-  <tr>
-    <td align="center"><b>Login Page</b></td>
-    <td align="center"><b>Product Catalog</b></td>
-  </tr>
-  <tr>
-    <td><img src="https://via.placeholder.com/400x300.png?text=Login+Page" alt="Login Page" /></td>
-    <td><img src="https://via.placeholder.com/400x300.png?text=Product+Catalog" alt="Product Catalog" /></td>
-  </tr>
-</table>
+## 🛠️ Getting Started
+
+### Prerequisites
+- JDK 17 or later
+- MySQL installed and running
+- Maven installed
+- Docker (optional for containerization)
+
+### Installation Steps
+
+1. **Clone the Repository**
+    ```bash
+    git clone https://github.com/yourusername/dream-shop.git
+    cd dream-shop
+    ```
+
+2. **Configure the Application**
+    Update the `application.yml` file with your database credentials:
+    ```yaml
+    spring:
+      datasource:
+        url: jdbc:mysql://localhost:3306/dream_shops_db
+        username: root
+        password: YOUR_PASSWORD
+    auth:
+      token:
+        jwtSecret: YOUR_SECRET_KEY
+    ```
+
+3. **Run the Application**
+    ```bash
+    ./mvnw spring-boot:run
+    ```
+
+4. **Access the API**
+    Visit the API at: [http://localhost:8080/api/v1](http://localhost:8080/api/v1)
 
 ---
 
-<h2>📦 Installation</h2>
-<h3>Prerequisites</h3>
-<ul>
-  <li>Java 17+</li>
-  <li>Node.js and npm</li>
-  <li>Docker (optional for deployment)</li>
-</ul>
+## 📌 API Endpoints
 
-<h3>Steps</h3>
-<ol>
-  <li>Clone the repository:
-    <pre><code>git clone https://github.com/your-username/dream-shop.git</code></pre>
-  </li>
-  <li>Navigate to the project directory:
-    <pre><code>cd dream-shop</code></pre>
-  </li>
-  <li>Start the back-end:
-    <pre><code>./mvnw spring-boot:run</code></pre>
-  </li>
-  <li>Start the front-end:
-    <pre><code>npm install
-npm start</code></pre>
-  </li>
-</ol>
+| Endpoint                 | Method | Description                    |
+|--------------------------|--------|--------------------------------|
+| `/auth/register`         | POST   | Register a new user           |
+| `/auth/login`            | POST   | Authenticate and get a token  |
+| `/products`              | GET    | Retrieve all products         |
+| `/products`              | POST   | Add a new product (Admin only)|
 
 ---
 
-<h2>🤝 Contribution</h2>
-<p>We welcome contributions! Whether it’s fixing bugs, enhancing features, or improving documentation, feel free to fork the repo and create a pull request.</p>
+
 
 ---
 
-<h2>📜 License</h2>
-<p>This project is licensed under the <a href="LICENSE">MIT License</a>.</p>
+## 🛠️ Contributing
+
+1. Fork the repository.
+2. Create a feature branch:
+    ```bash
+    git checkout -b feature-branch-name
+    ```
+3. Commit your changes:
+    ```bash
+    git commit -m "Add some feature"
+    ```
+4. Push to the branch:
+    ```bash
+    git push origin feature-branch-name
+    ```
+5. Open a pull request.
 
 ---
 
-<h2>🌍 Demo</h2>
-<p><b>Live Demo:</b> <a href="#">Dream Shop Live</a> (Add a link if hosted online)</p>
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 💬 Contact
+For suggestions or inquiries, contact me at:  
+📧 **[aibekshermatovv@example.com](mailto:aibekshermatovv@example.com)**  
+🌐 **[GitHub Profile](https://github.com/shermatov)**  
