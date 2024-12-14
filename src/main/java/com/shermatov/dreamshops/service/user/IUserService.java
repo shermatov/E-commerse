@@ -5,6 +5,8 @@ import com.shermatov.dreamshops.model.User;
 import com.shermatov.dreamshops.request.CreateUserRequest;
 import com.shermatov.dreamshops.request.UserUpdateRequest;
 
+import java.util.List;
+
 public interface IUserService {
     User getUserById(Long userId);
     User createUser(CreateUserRequest request);
@@ -14,4 +16,6 @@ public interface IUserService {
     UserDto convertUserToDto(User user);
 
     User getAuthenticatedUser();
+
+    List<User> getAllUsers();
 }
