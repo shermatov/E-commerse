@@ -22,6 +22,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
@@ -29,7 +32,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
-public class ShopConfig {
+@EnableWebMvc
+public class ShopConfig implements WebMvcConfigurer {
     private static final Logger logger = LoggerFactory.getLogger(ShopConfig.class);
     private final ShopUserDetailsService userDetailsService;
     private final JwtAuthEntryPoint authEntryPoint;
@@ -42,6 +46,14 @@ public class ShopConfig {
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
+    }
+
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api/**")
+                .allowedOrigins("http://localhost:3000")
+                .allowedMethods("GET", "POST", "PUT", "DELETE");
     }
 
     @Bean
@@ -79,9 +91,23 @@ public class ShopConfig {
         logger.debug("Configuring Security Filter Chain");
         http.csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception-> exception.authenticationEntryPoint (authEntryPoint))
-                .sessionManagement (session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth-> auth.requestMatchers (SECURED_URLS.toArray(String[]::new)).authenticated()
-                        .anyRequest().permitAll());
+                .sessionManagement (session-> session.sessionCreationPolicy(SessionCreationPolicy
+                        .STATELESS))
+                .authorizeHttpRequests(auth-> auth.requestMatchers (SECURED_URLS.toArray(String[]::new))
+                        .authenticated()
+                        .requestMatchers(
+                                "/api/v1/auth/**",
+                                "/swagger-ui.html",
+                                "/swagger-resources",
+                                "/swagger-resources/**",
+                                "/configuration/ui",
+                                "/configuration/security",
+                                "/swagger-ui/**",
+                                "/webjars/**",
+                                "/v2/api-docs",
+                                "/v3/api-docs",
+                                "/v3/api-docs/**")
+                        .permitAll());
         http.authenticationProvider(daoAuthenticationProvider());
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
